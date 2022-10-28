@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 """Module d'approximation de pi du projet BPI"""
 from random import uniform
-from sys import argv
+from sys import argv, exit
 
 
 def point_aleatoire():
