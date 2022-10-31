@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-"""Module graphique du projet BPI"""
+"""Graphical module"""
 import subprocess
 import approximate_pi
 
@@ -54,7 +54,81 @@ def next_step(pixel_dict, size, n):
     return 4*in_circle_points/int(n/10 + 1)
 
 
-def generate_ppm_file(i, size, displayed_pi, pixel_dict):
+def add_pi_display(pixel_dict, size, displayed_pi, digit_number):
+    """
+    Changes some pixel in pixel_dict to black pixels (0,0,0)
+    in order to add pie approximation in the middle of the ppm file
+    """
+    maximum_text_size = size/3
+    maximum_letter_size = int(maximum_text_size/(digit_number+2))
+    # letter sizes must be a multiple of 5
+    size_factor = maximum_letter_size//5
+    displayed_dict = pixel_dict.copy()
+    pixels_to_top = int((size-5*size_factor)/2)
+    pixels_to_left = int((size-(digit_number+2)*5*size_factor)/2)
+    for number in enumerate(str(displayed_pi)):
+        add_number(displayed_dict, pixels_to_top+1, pixels_to_left +
+                   1+number[0]*5*size_factor, number[1], size_factor, size)
+    return displayed_dict
+
+
+def color_black(displayed_dict, left_corner_pos, size_factor, size):
+    """
+    Adds a black square of dimension size_factor**2 in displayed_dict.
+    The square's left corner coordinates is left_corner_pos/
+    """
+    for i in range(size_factor):
+        for j in range(size_factor):
+            displayed_dict[left_corner_pos+i+j*size] = (0, 0, 0)
+
+
+def add_number(displayed_dict, pixels_to_top, pixels_to_left, number, size_factor, size):
+    """efeaz"""
+    zero = {0: False, 1: True, 2: True, 3: False, 4: False, 5: True, 6: False, 7: False, 8: True,
+            9: False, 10: True, 11: False, 12: False, 13: True, 14: False, 15: True, 16: False,
+            17: False, 18: True, 19: False, 20: False, 21: True, 22: True, 23: False, 24: False}
+    one = {0: False, 1: True, 2: True, 3: False, 4: False, 5: False, 6: False, 7: True, 8: False,
+           9: False, 10: False, 11: False, 12: True, 13: False, 14: False, 15: False, 16: False,
+           17: True, 18: False, 19: False, 20: False, 21: False, 22: True, 23: False, 24: False}
+    two = {0: False, 1: True, 2: True, 3: False, 4: False, 5: True, 6: False, 7: False, 8: True,
+           9: False, 10: False, 11: False, 12: True, 13: False, 14: False, 15: False, 16: True,
+           17: False, 18: False, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
+    three = {0: True, 1: True, 2: True, 3: True, 4: False, 5: False, 6: False, 7: False, 8: True,
+             9: False, 10: False, 11: True, 12: True, 13: True, 14: False, 15: False, 16: False,
+             17: False, 18: True, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
+    four = {0: True, 1: False, 2: False, 3: True, 4: False, 5: True, 6: False, 7: False, 8: True,
+            9: False, 10: True, 11: True, 12: True, 13: True, 14: False, 15: False, 16: False,
+            17: False, 18: True, 19: False, 20: False, 21: False, 22: False, 23: True, 24: False}
+    five = {0: False, 1: True, 2: True, 3: True, 4: False, 5: True, 6: False, 7: False, 8: False,
+            9: False, 10: True, 11: True, 12: True, 13: True, 14: False, 15: False, 16: False,
+            17: False, 18: True, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
+    six = {0: True, 1: True, 2: True, 3: True, 4: False, 5: True, 6: False, 7: False, 8: False,
+           9: False, 10: True, 11: True, 12: True, 13: True, 14: False, 15: True, 16: False,
+           17: False, 18: True, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
+    seven = {0: True, 1: True, 2: True, 3: True, 4: False, 5: False, 6: False, 7: False, 8: True,
+             9: False, 10: False, 11: False, 12: True, 13: False, 14: False, 15: False, 16: True,
+             17: False, 18: False, 19: False, 20: True, 21: False, 22: False, 23: False, 24: False}
+    eight = {0: True, 1: True, 2: True, 3: True, 4: False, 5: True, 6: False, 7: False, 8: True,
+             9: False, 10: False, 11: True, 12: True, 13: False, 14: False, 15: True, 16: False,
+             17: False, 18: True, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
+    nine = {0: True, 1: True, 2: True, 3: True, 4: False, 5: True, 6: False, 7: False, 8: True,
+            9: False, 10: True, 11: True, 12: True, 13: True, 14: False, 15: False, 16: False,
+            17: False, 18: True, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
+    dot = {0: False, 1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False,
+           9: False, 10: False, 11: False, 12: False, 13: False, 14: False, 15: False, 16: False,
+           17: False, 18: False, 19: False, 20: False, 21: False, 22: True, 23: False, 24: False}
+
+    number_to_dict = {"0": zero, "1": one, "2": two, "3": three, "4": four,
+                      "5": five, "6": six, "7": seven, "8": eight, "9": nine, ".": dot}
+    for i in range(5):
+        for j in range(5):
+            if number_to_dict[number][i+5*j]:
+                color_black(
+                    displayed_dict, pixels_to_left+size_factor*i +
+                    (pixels_to_top+j*size_factor)*size, size_factor, size)
+
+
+def generate_ppm_file(i, size, displayed_pi, pixel_dict, digit_number):
     """
     Generates a ppm file of dimension size*size,
     maximum color value of 1, color informations are in binary.
@@ -63,12 +137,14 @@ def generate_ppm_file(i, size, displayed_pi, pixel_dict):
     the current value of the approximation of pi.
     """
     img_name = f"img{i}_"+str(displayed_pi).replace(".", "-")+".ppm"
+    displayed_dict = add_pi_display(
+        pixel_dict, size, displayed_pi, digit_number)
     with open(img_name, "w", encoding="UTF-8") as img:
         img.write(f"P6\n{size} {size}\n1\n")
     with open(img_name, "ab") as img:
         for i in range(size**2):
             pixel_string = "%c%c%c" % (
-                pixel_dict[i][0], pixel_dict[i][1], pixel_dict[i][2])
+                displayed_dict[i][0], displayed_dict[i][1], displayed_dict[i][2])
             img.write(pixel_string.encode("utf-8"))
     return img_name
 
@@ -87,6 +163,13 @@ def modify_digit_number(number, digit_number):
     return int(number*10**digit_number)/10**digit_number
 
 
+def convert(file_names):
+    """The images name contained in file_name
+    are used to generate a gif of name pi_approximate.gif"""
+    cmd = ['convert'] + file_names + ['pi_approximate.gif']
+    subprocess.call(cmd)
+
+
 def main(size, n, digit_number):
     """
     Generates the 10 ppm files and the gif
@@ -102,15 +185,9 @@ def main(size, n, digit_number):
         pi_list.append(pi_approx)
         displayed_pi = average(pi_list)
         displayed_pi = modify_digit_number(displayed_pi, digit_number)
-        file_names.append(generate_ppm_file(i, size, displayed_pi, pixel_dict))
+        file_names.append(generate_ppm_file(
+            i, size, displayed_pi, pixel_dict, digit_number))
         convert(file_names)
 
 
-def convert(file_names):
-    """The images name contained in file_name
-    are used to generate a gif of name pi_approximate.gif"""
-    cmd = ['convert'] + file_names + ['pi_approximate.gif']
-    subprocess.call(cmd)
-
-
-main(1000, 100000, 5)
+main(1000, 1000000, 5)
