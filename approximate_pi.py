@@ -40,7 +40,6 @@ def main():
         print(
             "use: ./approximate_pi.py n "
         )
-        exit(1)
     else:
         if not argv[1].isdigit():
             raise TypeError("Argument must be a positive integer")
