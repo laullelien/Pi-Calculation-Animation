@@ -1,19 +1,16 @@
 #! /usr/bin/env python3
 """Graphical module"""
+from sys import argv
 import subprocess
 import approximate_pi
 
 
-def generate_pixel_dict(size):
+def generate_pixel_list(size):
     """
-    Returns a dictionnary with keys from 0 to size²-1
-    representing pixels. Each key is associated with
-    (1,1,1), a white pixel
+    Returns a list of dimension size²representing pixels.
+    At fist, it only stores (1,1,1), white pixels
     """
-    pixel_dict = {}
-    for i in range(size**2):
-        pixel_dict[i] = (1, 1, 1)
-    return pixel_dict
+    return [(1, 1, 1)]*size**2
 
 
 def coordinate_conversion(point, size):
@@ -25,64 +22,64 @@ def coordinate_conversion(point, size):
     x and y are floating numbers
     u and v are integers
     """
-    u = int((point[0]+1)*size/2)
-    v = int((point[1]+1)*size/2)
-    if u == size:
-        u -= 1
-    if v == size:
-        v -= 1
-    return (u, v)
+    u_coord = int((point[0]+1)*size/2)
+    v_coord = int((point[1]+1)*size/2)
+    if u_coord == size:
+        u_coord -= 1
+    if v_coord == size:
+        v_coord -= 1
+    return (u_coord, v_coord)
 
 
-def next_step(pixel_dict, size, n):
+def next_step(pixel_list, size, point_number):
     """
-    Generates ⌈n/10⌉ points, stores them as pixels in
-    pixel_dict. They are stored as (1,0,0) (red) if they are
+    Generates ⌈point_number/10⌉ points, stores them as pixels in
+    pixel_list. They are stored as (1,0,0) (red) if they are
     in the disc and (0,0,1) (blue) otherwise. Also returns the
     approximation of pi calculated with these points
     """
     in_circle_points = 0
-    for _ in range(int(n/10 + 1)):
+    for _ in range(int(point_number/10 + 1)):
         point = approximate_pi.random_point()
         in_circle = approximate_pi.in_circle(point)
         point = coordinate_conversion(point, size)
         if in_circle:
             in_circle_points += 1
-            pixel_dict[point[1]*size+point[0]] = (1, 0, 0)
+            pixel_list[point[1]*size+point[0]] = (1, 0, 0)
         else:
-            pixel_dict[point[1]*size+point[0]] = (0, 0, 1)
-    return 4*in_circle_points/int(n/10 + 1)
+            pixel_list[point[1]*size+point[0]] = (0, 0, 1)
+    return 4*in_circle_points/int(point_number/10 + 1)
 
 
-def add_pi_display(pixel_dict, size, displayed_pi, digit_number):
+def add_pi_display(pixel_list, size, displayed_pi, digit_number):
     """
-    Changes some pixel in pixel_dict to black pixels (0,0,0)
+    Returns a copy of pixel_list with black pixels (0,0,0)
     in order to add pie approximation in the middle of the ppm file
     """
     maximum_text_size = size/3
     maximum_letter_size = int(maximum_text_size/(digit_number+2))
     # letter sizes must be a multiple of 5
     size_factor = maximum_letter_size//5
-    displayed_dict = pixel_dict.copy()
+    pi_pixel_list = pixel_list.copy()
     pixels_to_top = int((size-5*size_factor)/2)
     pixels_to_left = int((size-(digit_number+2)*5*size_factor)/2)
-    for number in enumerate(str(displayed_pi)):
-        add_number(displayed_dict, pixels_to_top+1, pixels_to_left +
+    for number in enumerate(str(displayed_pi)+"0"*(2+digit_number-len(str(displayed_pi)))):
+        add_number(pi_pixel_list, pixels_to_top+1, pixels_to_left +
                    1+number[0]*5*size_factor, number[1], size_factor, size)
-    return displayed_dict
+    return pi_pixel_list
 
 
-def color_black(displayed_dict, left_corner_pos, size_factor, size):
+def color_black(pi_pixel_list, left_corner_pos, size_factor, size):
     """
-    Adds a black square of dimension size_factor**2 in displayed_dict.
+    Adds a black square of dimension size_factor**2 in pi_pixel_list.
     The square's left corner coordinates is left_corner_pos/
     """
     for i in range(size_factor):
         for j in range(size_factor):
-            displayed_dict[left_corner_pos+i+j*size] = (0, 0, 0)
+            pi_pixel_list[left_corner_pos+i+j*size] = (0, 0, 0)
 
 
-def add_number(displayed_dict, pixels_to_top, pixels_to_left, number, size_factor, size):
+def add_number(pi_pixel_list, pixels_to_top, pixels_to_left, number, size_factor, size):
     """efeaz"""
     zero = {0: False, 1: True, 2: True, 3: False, 4: False, 5: True, 6: False, 7: False, 8: True,
             9: False, 10: True, 11: False, 12: False, 13: True, 14: False, 15: True, 16: False,
@@ -124,39 +121,40 @@ def add_number(displayed_dict, pixels_to_top, pixels_to_left, number, size_facto
         for j in range(5):
             if number_to_dict[number][i+5*j]:
                 color_black(
-                    displayed_dict, pixels_to_left+size_factor*i +
+                    pi_pixel_list, pixels_to_left+size_factor*i +
                     (pixels_to_top+j*size_factor)*size, size_factor, size)
 
 
-def generate_ppm_file(i, size, displayed_pi, pixel_dict, digit_number):
+def generate_ppm_file(i, size, displayed_pi, pixel_list, digit_number):
     """
     Generates a ppm file of dimension size*size,
     maximum color value of 1, color informations are in binary.
-    The pixels are stored in pixel_dict.
-    Returns the file's name which contains the number of the step as well as
-    the current value of the approximation of pi.
+    The pixels are stored in pixel_list.
+    Returns the file's name which contains the number of the step, i as well as
+    the current value of the approximation of pi with the right number of digit digit_number.
     """
-    img_name = f"img{i}_"+str(displayed_pi).replace(".", "-")+".ppm"
-    displayed_dict = add_pi_display(
-        pixel_dict, size, displayed_pi, digit_number)
-    with open(img_name, "w", encoding="UTF-8") as img:
+    pi_string = str(displayed_pi).replace(".", "-")
+    img_name = f"img{i}_{pi_string}.ppm"
+    pi_pixel_list = add_pi_display(
+        pixel_list, size, displayed_pi, digit_number)
+    with open(img_name, "w", encoding="utf-8") as img:
         img.write(f"P6\n{size} {size}\n1\n")
     with open(img_name, "ab") as img:
         for i in range(size**2):
             pixel_string = "%c%c%c" % (
-                displayed_dict[i][0], displayed_dict[i][1], displayed_dict[i][2])
+                pi_pixel_list[i][0], pi_pixel_list[i][1], pi_pixel_list[i][2])
             img.write(pixel_string.encode("utf-8"))
     return img_name
 
 
 def average(number_list):
-    """Return the average of the numbers in the list"""
+    """Returns the average of the numbers in the list"""
     return sum(number_list)/len(number_list)
 
 
 def modify_digit_number(number, digit_number):
     """
-        Return a new number which is the number
+        Returns a new number which is the number
         passed in with only digit_number digits
         after its comma
     """
@@ -165,29 +163,40 @@ def modify_digit_number(number, digit_number):
 
 def convert(file_names):
     """The images name contained in file_name
-    are used to generate a gif of name pi_approximate.gif"""
-    cmd = ['convert'] + file_names + ['pi_approximate.gif']
+    are used to generate a gif of name approximate_pi.gif"""
+    cmd = ['convert'] + file_names + ['approximate_pi.gif']
     subprocess.call(cmd)
 
 
-def main(size, n, digit_number):
+def main():
     """
     Generates the 10 ppm files and the gif
-    size,n>10
+    size,point_number>=100
     1<=digit_number<=5
-    size, n and digit_number are integers
+    size, point_number and digit_number are integers
     """
+    if len(argv) != 4:
+        print("use: ./draw.pi size point_number digit_number")
+        exit(1)
+    for element in (argv[1], argv[2], argv[3]):
+        if not element.isdigit():
+            raise TypeError(f"{element} is not an interger")
+    if int(argv[1]) < 100 or int(argv[2]) < 100 or int(argv[3]) < 1 or int(argv[3]) > 5:
+        raise ValueError(
+            "Arguments must respect size >= 100, point_number >= 100, 1 <= digit_number <= 5")
+    size, point_number, digit_number = [int(arg) for arg in argv[1:]]
     pi_list = []  # contains the 10 approximations of pi
     file_names = []
-    pixel_dict = generate_pixel_dict(size)
+    pixel_list = generate_pixel_list(size)
     for i in range(10):
-        pi_approx = next_step(pixel_dict, size, n)
+        pi_approx = next_step(pixel_list, size, point_number)
         pi_list.append(pi_approx)
         displayed_pi = average(pi_list)
         displayed_pi = modify_digit_number(displayed_pi, digit_number)
         file_names.append(generate_ppm_file(
-            i, size, displayed_pi, pixel_dict, digit_number))
-        convert(file_names)
+            i, size, displayed_pi, pixel_list, digit_number))
+    convert(file_names)
 
 
-main(1000, 1000000, 5)
+if __name__ == "__main__":
+    main()
