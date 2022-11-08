@@ -42,7 +42,7 @@ def main():
         )
     else:
         if not argv[1].isdigit():
-            raise TypeError("Argument must be a positive integer")
+            raise ValueError("Argument must be a positive integer")
         else:
             print(pi_approximate(int(argv[1])))
 

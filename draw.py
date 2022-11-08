@@ -185,7 +185,7 @@ def main():
         print("use: ./draw.pi window_size point_number digit_number")
     for element in (argv[1], argv[2], argv[3]):
         if not element.isdigit():
-            raise TypeError(f"{element} is not an interger")
+            raise ValueError(f"{element} is not an interger")
     if int(argv[1]) < 100 or int(argv[2]) < 100 or int(argv[3]) < 1 or int(argv[3]) > 5:
         raise ValueError(
             "Argument values must respect window_size >= 100, point_number >= 100, 1 <= digit_number <= 5")
