@@ -3,7 +3,6 @@
 from sys import argv
 import subprocess
 import approximate_pi
-import time
 
 
 def generate_pixel_list(window_size):
@@ -137,7 +136,6 @@ def generate_ppm_file(i, window_size, displayed_pi, pixel_list, digit_number):
     pi_string = displayed_pi.replace(".", "-")
     img_name = f"img{i}_{pi_string}.ppm"
     pi_dict = create_pi_dict(window_size, displayed_pi, digit_number)
-    t0 = time.time()
     pixel_to_bytes = {(0, 0, 0): b"\x00\x00\x00", (0, 0, 1): b"\x00\x00\x01", (0, 1, 0): b"\x00\x01\x00", (0, 1, 1): b"\x00\x01\x01",
                       (1, 0, 0): b"\x01\x00\x00", (1, 0, 1): b"\x01\x00\x01", (1, 1, 0): b"\x01\x01\x00", (1, 1, 1): b"\x01\x01\x01"}
     with open(img_name, "w", encoding="utf-8") as img:
@@ -148,7 +146,6 @@ def generate_ppm_file(i, window_size, displayed_pi, pixel_list, digit_number):
                 img.write(pixel_to_bytes[pi_dict[i]])
             else:
                 img.write(pixel_to_bytes[pixel_list[i]])
-    print("write", time.time()-t0)
     return img_name
 
 
@@ -180,7 +177,6 @@ def main():
     1<=digit_number<=5
     window_size, point_number and digit_number are integers
     """
-    t0 = time.time()
     if len(argv) != 4:
         print("use: ./draw.pi window_size point_number digit_number")
     for element in (argv[1], argv[2], argv[3]):
@@ -201,7 +197,6 @@ def main():
         file_names.append(generate_ppm_file(
             i, window_size, displayed_pi, pixel_list, digit_number))
     convert(file_names)
-    print("main", time.time()-t0)
 
 
 if __name__ == "__main__":
