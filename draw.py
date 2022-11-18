@@ -160,7 +160,7 @@ def modify_digit_number(number, digit_number):
         passed in with only digit_number digits
         after its comma
     """
-    return f"{number:{digit_number}f}"
+    return f"{number:.{digit_number}f}"
 
 
 def convert(file_names):
