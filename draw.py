@@ -24,6 +24,10 @@ def coordinate_conversion(point, window_size):
     """
     u_coord = int((point[0]+1)*window_size/2)
     v_coord = int((point[1]+1)*window_size/2)
+    if u_coord == window_size:
+        u_coord -= 1
+    if v_coord == window_size:
+        v_coord -= 1
     return (u_coord, v_coord)
 
 
@@ -156,14 +160,13 @@ def modify_digit_number(number, digit_number):
         passed in with only digit_number digits
         after its comma
     """
-    return f'{number:.{digit_number}f}'
+    return f"{number:.{digit_number}f}"
 
 
 def convert(file_names):
     """The images name contained in file_name
     are used to generate a gif of name approximate_pi.gif"""
-    cmd = ['convert', '-delay', '25'] + file_names + \
-        ['approximate_pi.gif']
+    cmd = ['convert'] + file_names + ['approximate_pi.gif']
     subprocess.call(cmd)
 
 
@@ -175,8 +178,7 @@ def main():
     window_size, point_number and digit_number are integers
     """
     if len(argv) != 4:
-        raise ValueError(
-            "use: ./draw.pi window_size point_number digit_number")
+        print("use: ./draw.pi window_size point_number digit_number")
     for element in (argv[1], argv[2], argv[3]):
         if not element.isdigit():
             raise ValueError(f"{element} is not an interger")
