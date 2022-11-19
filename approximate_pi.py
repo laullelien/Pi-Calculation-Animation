@@ -7,21 +7,21 @@ from sys import argv
 def random_point():
     """
     Generates and returns a point (x,y) with -1<=x,y<=1
-    x and y are floating numbers
+    x and y are floating numbers.
     """
     return (uniform(-1, 1), uniform(-1, 1))
 
 
 def in_circle(point):
     """
-    Returns True if the point is in the disc of radius 1 and False otherwise
+    Returns True if the point is in the disc of radius 1 and False otherwise.
     """
     return (point[0]**2+point[1]**2) <= 1
 
 
 def pi_approximate(point_nb):
     """
-    Returns an approximation of pi using the Monte-Carlo method with n points
+    Returns an approximation of pi using the Monte-Carlo method with n points.
     """
     points_in_circle = 0
     for _ in range(point_nb):
@@ -34,7 +34,7 @@ def pi_approximate(point_nb):
 
 def main():
     """Returns an approximation of pi using the Monte-Carlo method
-    using the number passed in as an argument
+    using the number passed in as an argument.
     """
     if len(argv) != 2:
         print(

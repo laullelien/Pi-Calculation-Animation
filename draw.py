@@ -1,24 +1,22 @@
 #! /usr/bin/env python3
 """Graphical module"""
-from sys import getsizeof
 from sys import argv
 import subprocess
 import approximate_pi
-import time
 
 
 def generate_pixel_list(window_size):
     """
-    Returns a list of dimension window_size²representing pixels.
-    At fist, it only stores 1, white pixels
+    Returns a list of dimension window_size² representing pixels.
+    At first, it only stores 1s, white pixels
     """
     return [1]*window_size**2
 
 
 def coordinate_conversion(point, window_size):
     """
-    Transforms a point of coordinate (x,y)
-    in an other point of coordinate (u,v) and returns it
+    Transforms a point of coordinates (x,y)
+    in another point of coordinates (u,v) and returns it
     -1<x,y<1
     0<=u,v<=window_size-1
     x and y are floating numbers
@@ -32,9 +30,9 @@ def coordinate_conversion(point, window_size):
 def next_step(pixel_list, window_size, point_number):
     """
     Generates ⌈point_number/10⌉ points, stores them as pixels in
-    pixel_list. They are stored as 2 (red) if they are
-    in the disc and 3 (blue) otherwise. Also returns the
-    approximation of pi calculated with these points
+    pixel_list. They are stored as 2s (red) if they are
+    in the disc and 3s (blue) otherwise. Also returns the
+    approximation of pi calculated with these points.
     """
     in_circle_points = 0
     for _ in range(int(point_number/10 + 1)):
@@ -51,8 +49,8 @@ def next_step(pixel_list, window_size, point_number):
 
 def create_pi_dict(window_size, displayed_pi, digit_nb):
     """
-    Returns a dictionnary with black pixels. Its keys
-    are the pixel numbers allowing to display pi
+    Returns a dictionary with black pixels. Its keys
+    are the pixel numbers allowing to display pi.
     """
     maximum_text_size = window_size/3
     maximum_letter_size = int(maximum_text_size/(digit_nb+2))
@@ -72,45 +70,32 @@ def add_number(pi_dict, pixels_to_top, pixels_to_left, number, size_factor, wind
     Adds the pixels numbers of the pixel that are required to display the number passed in as a parametre
     to pi_dict thanks to the coordinates of the number's left corner.
     """
-    zero = {1: True, 2: True, 3: False, 4: False, 5: True, 6: False, 7: False, 8: True,
-            9: False, 10: True, 11: False, 12: False, 13: True, 14: False, 15: True, 16: False,
-            17: False, 18: True, 19: False, 20: False, 21: True, 22: True, 23: False, 24: False}
-    one = {0: False, 1: True, 2: True, 3: False, 4: False, 5: False, 6: False, 7: True, 8: False,
-           9: False, 10: False, 11: False, 12: True, 13: False, 14: False, 15: False, 16: False,
-           17: True, 18: False, 19: False, 20: False, 21: False, 22: True, 23: False, 24: False}
-    two = {0: False, 1: True, 2: True, 3: False, 4: False, 5: True, 6: False, 7: False, 8: True,
-           9: False, 10: False, 11: False, 12: True, 13: False, 14: False, 15: False, 16: True,
-           17: False, 18: False, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
-    three = {0: True, 1: True, 2: True, 3: True, 4: False, 5: False, 6: False, 7: False, 8: True,
-             9: False, 10: False, 11: True, 12: True, 13: True, 14: False, 15: False, 16: False,
-             17: False, 18: True, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
-    four = {0: True, 1: False, 2: False, 3: True, 4: False, 5: True, 6: False, 7: False, 8: True,
-            9: False, 10: True, 11: True, 12: True, 13: True, 14: False, 15: False, 16: False,
-            17: False, 18: True, 19: False, 20: False, 21: False, 22: False, 23: True, 24: False}
-    five = {0: False, 1: True, 2: True, 3: True, 4: False, 5: True, 6: False, 7: False, 8: False,
-            9: False, 10: True, 11: True, 12: True, 13: True, 14: False, 15: False, 16: False,
-            17: False, 18: True, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
-    six = {0: True, 1: True, 2: True, 3: True, 4: False, 5: True, 6: False, 7: False, 8: False,
-           9: False, 10: True, 11: True, 12: True, 13: True, 14: False, 15: True, 16: False,
-           17: False, 18: True, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
-    seven = {0: True, 1: True, 2: True, 3: True, 4: False, 5: False, 6: False, 7: False, 8: True,
-             9: False, 10: False, 11: False, 12: True, 13: False, 14: False, 15: False, 16: True,
-             17: False, 18: False, 19: False, 20: True, 21: False, 22: False, 23: False, 24: False}
-    eight = {0: True, 1: True, 2: True, 3: True, 4: False, 5: True, 6: False, 7: False, 8: True,
-             9: False, 10: False, 11: True, 12: True, 13: False, 14: False, 15: True, 16: False,
-             17: False, 18: True, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
-    nine = {0: True, 1: True, 2: True, 3: True, 4: False, 5: True, 6: False, 7: False, 8: True,
-            9: False, 10: True, 11: True, 12: True, 13: True, 14: False, 15: False, 16: False,
-            17: False, 18: True, 19: False, 20: True, 21: True, 22: True, 23: True, 24: False}
-    dot = {0: False, 1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False,
-           9: False, 10: False, 11: False, 12: False, 13: False, 14: False, 15: False, 16: False,
-           17: False, 18: False, 19: False, 20: False, 21: False, 22: True, 23: False, 24: False}
+    zero = {1: True, 2: True, 5: True, 8: True, 10: True,
+            13: True, 15: True, 18: True, 21: True, 22: True}
+    one = {1: True, 2: True, 7: True, 12: True, 17: True, 22: True}
+    two = {1: True, 2: True, 5: True, 8: True, 12: True, 16: True,
+           20: True, 21: True, 22: True, 23: True}
+    three = {0: True, 1: True, 2: True, 3: True, 8: True, 11: True,
+             12: True, 13: True, 18: True, 20: True, 21: True, 22: True, 23: True}
+    four = {0: True, 3: True, 5: True, 8: True, 10: True,
+            11: True, 12: True, 13: True, 18: True, 23: True}
+    five = {1: True, 2: True, 3: True, 5: True, 10: True, 11: True,
+            12: True, 13: True, 18: True, 20: True, 21: True, 22: True, 23: True}
+    six = {0: True, 1: True, 2: True, 3: True, 5: True, 10: True, 11: True,
+           12: True, 13: True, 15: True, 18: True, 20: True, 21: True, 22: True, 23: True}
+    seven = {0: True, 1: True, 2: True, 3: True,
+             8: True, 12: True, 16: True, 20: True}
+    eight = {0: True, 1: True, 2: True, 3: True, 5: True, 8: True, 11: True, 12: True, 15: True,
+             18: True, 20: True, 21: True, 22: True, 23: True}
+    nine = {0: True, 1: True, 2: True, 3: True, 5: True, 8: True, 10: True,
+            11: True, 12: True, 13: True, 18: True, 20: True, 21: True, 22: True, 23: True}
+    dot = {22: True}
 
     number_to_dict = {"0": zero, "1": one, "2": two, "3": three, "4": four,
                       "5": five, "6": six, "7": seven, "8": eight, "9": nine, ".": dot}
     for i in range(5):
         for j in range(5):
-            if number_to_dict[number][i+5*j]:
+            if i+5*j in number_to_dict[number]:
                 color_black(
                     pi_dict, pixels_to_left+size_factor*i +
                     (pixels_to_top+j*size_factor)*window_size, size_factor, window_size)
@@ -119,7 +104,7 @@ def add_number(pi_dict, pixels_to_top, pixels_to_left, number, size_factor, wind
 def color_black(pi_dict, left_corner_pos, size_factor, window_size):
     """
     Adds the pixel numbers of a black square of dimension size_factor**2 in pi_dict.
-    The square's left corner coordinates is left_corner_pos
+    The square's left corner coordinates are left_corner_pos.
     """
     for i in range(size_factor):
         for j in range(size_factor):
@@ -131,8 +116,8 @@ def generate_ppm_file(i, window_size, displayed_pi, pixel_list, digit_nb):
     Generates a ppm file of dimension window_size*window_size,
     maximum color value of 1, color informations are in binary.
     The pixels are stored in pixel_list.
-    Returns the file's name which contains the number of the step, i as well as
-    the current value of the approximation of pi with the right number of digit digit_nb.
+    Returns the file's name which contains the number of the step, as well as
+    the current value of the approximation of pi with the right number of digits digit_nb.
     """
     pi_string = displayed_pi.replace(".", "-")
     img_name = f"img{i}_{pi_string}.ppm"
@@ -151,7 +136,9 @@ def generate_ppm_file(i, window_size, displayed_pi, pixel_list, digit_nb):
 
 
 def average(number_list):
-    """Returns the average of the numbers in the list"""
+    """
+    Returns the average of the numbers in the list.
+    """
     return sum(number_list)/len(number_list)
 
 
@@ -159,14 +146,16 @@ def modify_digit_nb(number, digit_nb):
     """
         Returns a new number which is the number
         passed in with only digit_nb digits
-        after its comma
+        after its comma.
     """
     return f"{number:.{digit_nb}f}"
 
 
 def convert(file_names):
-    """The image names contained in file_name
-    are used to generate a gif of name approximate_pi.gif"""
+    """
+    The image names contained in file_name
+    are used to generate a gif of name approximate_pi.gif.
+    """
     cmd = ["convert", "-delay", "25"] + file_names + ["approximate_pi.gif"]
     subprocess.call(cmd)
 
@@ -176,13 +165,12 @@ def main():
     Generates the 10 ppm files and the gif
     window_size,point_number>=100
     1<=digit_nb<=5
-    window_size, point_number and digit_nb are integers
+    window_size, point_number and digit_nb are integers.
     """
     if len(argv) != 4:
         print("use: ./draw.pi window_size point_number digit_nb")
     for element in (argv[1], argv[2], argv[3]):
-        if not element.isdigit():
-            raise ValueError(f"{element} is not an interger")
+        The image names contained in file_name are used to generate a gif of name approximate_pi.gif.
     if int(argv[1]) < 100 or int(argv[2]) < 100 or int(argv[3]) < 1 or int(argv[3]) > 5:
         raise ValueError(
             "Argument values must respect window_size >= 100, point_number >= 100, 1 <= digit_nb <= 5")
@@ -200,7 +188,5 @@ def main():
     convert(file_names)
 
 
-t0 = time.time()
 if __name__ == "__main__":
     main()
-print(time.time()-t0)
