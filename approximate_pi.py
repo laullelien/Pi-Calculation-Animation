@@ -19,17 +19,17 @@ def in_circle(point):
     return (point[0]**2+point[1]**2) <= 1
 
 
-def pi_approximate(point_number):
+def pi_approximate(point_nb):
     """
     Returns an approximation of pi using the Monte-Carlo method with n points
     """
     points_in_circle = 0
-    for _ in range(point_number):
-        points_in_circle += int(in_circle(random_point()))
+    for _ in range(point_nb):
+        points_in_circle += in_circle(random_point())
     # points_in_circle/n corresponds to an approximation of
     # the area of the disc divided by the area of the square,
     # which is pi/4
-    return 4*points_in_circle/point_number
+    return 4*points_in_circle/point_nb
 
 
 def main():
