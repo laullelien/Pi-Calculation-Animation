@@ -170,7 +170,8 @@ def main():
     if len(argv) != 4:
         print("use: ./draw.pi window_size point_number digit_nb")
     for element in (argv[1], argv[2], argv[3]):
-        The image names contained in file_name are used to generate a gif of name approximate_pi.gif.
+        if not element.isdigit():
+            raise ValueError(f"{element} is not an interger")
     if int(argv[1]) < 100 or int(argv[2]) < 100 or int(argv[3]) < 1 or int(argv[3]) > 5:
         raise ValueError(
             "Argument values must respect window_size >= 100, point_number >= 100, 1 <= digit_nb <= 5")
