@@ -70,26 +70,19 @@ def add_number(pi_dict, pixels_to_top, pixels_to_left, number, size_factor, wind
     Adds the pixels numbers of the pixel that are required to display the number passed in as a parametre
     to pi_dict thanks to the coordinates of the number's left corner.
     """
-    zero = {1: True, 2: True, 5: True, 8: True, 10: True,
-            13: True, 15: True, 18: True, 21: True, 22: True}
-    one = {1: True, 2: True, 7: True, 12: True, 17: True, 22: True}
-    two = {1: True, 2: True, 5: True, 8: True, 12: True, 16: True,
-           20: True, 21: True, 22: True, 23: True}
-    three = {0: True, 1: True, 2: True, 3: True, 8: True, 11: True,
-             12: True, 13: True, 18: True, 20: True, 21: True, 22: True, 23: True}
-    four = {0: True, 3: True, 5: True, 8: True, 10: True,
-            11: True, 12: True, 13: True, 18: True, 23: True}
-    five = {1: True, 2: True, 3: True, 5: True, 10: True, 11: True,
-            12: True, 13: True, 18: True, 20: True, 21: True, 22: True, 23: True}
-    six = {0: True, 1: True, 2: True, 3: True, 5: True, 10: True, 11: True,
-           12: True, 13: True, 15: True, 18: True, 20: True, 21: True, 22: True, 23: True}
-    seven = {0: True, 1: True, 2: True, 3: True,
-             8: True, 12: True, 16: True, 20: True}
-    eight = {0: True, 1: True, 2: True, 3: True, 5: True, 8: True, 11: True, 12: True, 15: True,
-             18: True, 20: True, 21: True, 22: True, 23: True}
-    nine = {0: True, 1: True, 2: True, 3: True, 5: True, 8: True, 10: True,
-            11: True, 12: True, 13: True, 18: True, 20: True, 21: True, 22: True, 23: True}
-    dot = {22: True}
+    zero = {1, 2, 5, 8, 10,
+            13, 15, 18, 21, 22}
+    one = {1, 2, 7, 12, 17, 22}
+    two = {1, 2, 5, 8, 12, 16, 20, 21, 22, 23}
+    three = {0, 1, 2, 3, 8, 11, 12, 13, 18, 20, 21, 22, 23}
+    four = {0, 3, 5, 8, 10,
+            11, 12, 13, 18, 23}
+    five = {1, 2, 3, 5, 10, 11, 12, 13, 18, 20, 21, 22, 23}
+    six = {0, 1, 2, 3, 5, 10, 11, 12, 13, 15, 18, 20, 21, 22, 23}
+    seven = {0, 1, 2, 3, 8, 12, 16, 20}
+    eight = {0, 1, 2, 3, 5, 8, 11, 12, 15, 18, 20, 21, 22, 23}
+    nine = {0, 1, 2, 3, 5, 8, 10, 11, 12, 13, 18, 20, 21, 22, 23}
+    dot = {22}
 
     number_to_dict = {"0": zero, "1": one, "2": two, "3": three, "4": four,
                       "5": five, "6": six, "7": seven, "8": eight, "9": nine, ".": dot}
@@ -161,10 +154,10 @@ def convert(file_names):
 
 
 def main():
-    """
+    """   
     Generates the 10 ppm files and the gif
-    window_size,point_number>=100
-    1<=digit_nb<=5
+    window_size, point_number >= 100
+    1 <= digit_nb <= 5
     window_size, point_number and digit_nb are integers.
     """
     if len(argv) != 4:
