@@ -55,17 +55,17 @@ def create_pi_dict(window_size, displayed_pi, digit_nb):
     maximum_text_size = window_size/3
     maximum_letter_size = int(maximum_text_size/(digit_nb+2))
     # letter sizes must be a multiple of 5
-    size_factor = maximum_letter_size//5
-    pixels_to_top = int((window_size-5*size_factor)/2)
-    pixels_to_left = int((window_size-(digit_nb+2)*5*size_factor)/2)
+    scale = maximum_letter_size//5
+    pixels_to_top = int((window_size-5*scale)/2)
+    pixels_to_left = int((window_size-(digit_nb+2)*5*scale)/2)
     pi_dict = {}
     for number in enumerate(str(displayed_pi)+"0"*(2+digit_nb-len(str(displayed_pi)))):
         add_number(pi_dict, pixels_to_top+1, pixels_to_left +
-                   1+number[0]*5*size_factor, number[1], size_factor, window_size)
+                   1+number[0]*5*scale, number[1], scale, window_size)
     return pi_dict
 
 
-def add_number(pi_dict, pixels_to_top, pixels_to_left, number, size_factor, window_size):
+def add_number(pi_dict, pixels_to_top, pixels_to_left, number, scale, window_size):
     """
     Adds the pixels numbers of the pixel that are required to display the number passed in as a parametre
     to pi_dict thanks to the coordinates of the number's left corner.
@@ -90,17 +90,17 @@ def add_number(pi_dict, pixels_to_top, pixels_to_left, number, size_factor, wind
         for j in range(5):
             if i+5*j in number_to_dict[number]:
                 color_black(
-                    pi_dict, pixels_to_left+size_factor*i +
-                    (pixels_to_top+j*size_factor)*window_size, size_factor, window_size)
+                    pi_dict, pixels_to_left+scale*i +
+                    (pixels_to_top+j*scale)*window_size, scale, window_size)
 
 
-def color_black(pi_dict, left_corner_pos, size_factor, window_size):
+def color_black(pi_dict, left_corner_pos, scale, window_size):
     """
-    Adds the pixel numbers of a black square of dimension size_factor**2 in pi_dict.
+    Adds the pixel numbers of a black square of dimension scale**2 in pi_dict.
     The square's left corner coordinates are left_corner_pos.
     """
-    for i in range(size_factor):
-        for j in range(size_factor):
+    for i in range(scale):
+        for j in range(scale):
             pi_dict[left_corner_pos+i+j*window_size] = 0
 
 
