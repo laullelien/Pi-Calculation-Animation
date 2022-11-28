@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 """pi approximation module"""
-from random import uniform
+from random import random
 from sys import argv
 
 
@@ -9,7 +9,7 @@ def random_point():
     Generates and returns a point (x,y) with -1<=x,y<=1
     x and y are floating numbers.
     """
-    return (uniform(-1, 1), uniform(-1, 1))
+    return (2*random()-1, 2*random()-1)
 
 
 def in_circle(point):
