@@ -65,6 +65,7 @@ def create_pi_dict(window_size, displayed_pi, digit_nb):
     return pi_dict
 
 
+
 def add_number(pi_dict, pixels_to_top, pixels_to_left, number, scale, window_size):
     """
     Adds the pixels numbers of the pixel that are required to display the number passed in as a parametre
