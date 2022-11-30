@@ -3,6 +3,7 @@
 from sys import argv
 import subprocess
 import approximate_pi
+import time
 
 
 def generate_pixel_list(window_size):
@@ -63,7 +64,6 @@ def create_pi_dict(window_size, displayed_pi, digit_nb):
         add_number(pi_dict, pixels_to_top+1, pixels_to_left +
                    1+number[0]*5*scale, number[1], scale, window_size)
     return pi_dict
-
 
 
 def add_number(pi_dict, pixels_to_top, pixels_to_left, number, scale, window_size):
@@ -155,7 +155,7 @@ def convert(file_names):
 
 
 def main():
-    """   
+    """
     Generates the 10 ppm files and the gif
     window_size, point_number >= 100
     1 <= digit_nb <= 5
@@ -174,7 +174,9 @@ def main():
     file_names = []
     pixel_list = generate_pixel_list(window_size)
     for i in range(10):
+        t0 = time.time()
         pi_approx = next_step(pixel_list, window_size, point_number)
+        print(time.time()-t0)
         pi_list.append(pi_approx)
         displayed_pi = average(pi_list)
         displayed_pi = modify_digit_nb(displayed_pi, digit_nb)
